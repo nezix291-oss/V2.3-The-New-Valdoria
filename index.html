@@ -1,1 +1,282 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>The New Valdoria</title>
+    <style>
+        body {
+            background: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            line-height: 1.6;
+        }
 
+        a { color: yellow; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        header {
+            text-align: center;
+            padding: 30px;
+            border-bottom: 2px solid yellow;
+        }
+
+        section { padding: 20px; }
+
+        .card {
+            background: #111;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 800px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(255, 255, 0, 0.1);
+        }
+
+        h2 { color: yellow; border-bottom: 1px solid #333; padding-bottom: 10px; }
+
+        button {
+            background: yellow;
+            color: black;
+            border: none;
+            padding: 12px 25px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        button:hover { background: #ffd700; transform: scale(1.05); }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            background: #222;
+            color: white;
+            border: 1px solid yellow;
+            box-sizing: border-box;
+        }
+
+        /* --- STYLES DE LA ROUE CORRIGÉS --- */
+        #wheelContainer {
+            text-align: center;
+            position: relative;
+            margin: 20px auto;
+            width: 320px;
+        }
+
+        #pointer {
+            font-size: 40px;
+            color: yellow;
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+
+        #wheel {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            border: 8px solid yellow;
+            position: relative;
+            overflow: hidden;
+            transition: transform 4s cubic-bezier(0.15, 0, 0.15, 1);
+            background: #444;
+        }
+
+        .slice {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            top: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            clip-path: polygon(50% 50%, 50% 0%, 100% 0%, 100% 50%); /* Crée un quart de cercle */
+            transform-origin: 50% 50%;
+        }
+
+        /* Ajustement des angles pour 6 parts de 60 degrés */
+        .slice:nth-child(1) { transform: rotate(0deg); background: #ff4d4d; clip-path: polygon(50% 50%, 50% 0%, 100% 20%); }
+        .slice:nth-child(2) { transform: rotate(60deg); background: #2ecc71; clip-path: polygon(50% 50%, 50% 0%, 100% 20%); }
+        .slice:nth-child(3) { transform: rotate(120deg); background: #ff4d4d; clip-path: polygon(50% 50%, 50% 0%, 100% 20%); }
+        .slice:nth-child(4) { transform: rotate(180deg); background: #2ecc71; clip-path: polygon(50% 50%, 50% 0%, 100% 20%); }
+        .slice:nth-child(5) { transform: rotate(240deg); background: #ff4d4d; clip-path: polygon(50% 50%, 50% 0%, 100% 20%); }
+        .slice:nth-child(6) { transform: rotate(300deg); background: #ff4d4d; clip-path: polygon(50% 50%, 50% 0%, 100% 20%); }
+
+        .slice span {
+            position: absolute;
+            top: 15%;
+            right: 25%;
+            transform: rotate(30deg);
+            font-weight: bold;
+            font-size: 12px;
+            color: white;
+            text-shadow: 1px 1px 2px black;
+        }
+
+        .wheel-center {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: yellow;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 5;
+            border: 2px solid black;
+        }
+
+        #result {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 15px;
+            min-height: 30px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🏰 The New Valdoria</h1>
+    <p>IP : 151.240.100.21:25582 | Version : 1.21.1</p>
+    <a href="https://discord.com/invite/yKXFcCNq5S">Discord</a> |
+    <a href="https://www.tiktok.com/@the_new_valdoria">TikTok</a> |
+    <a href="https://nezix291-oss.github.io/Site-d-affichage-open-ou-non/">Site associé</a>
+</header>
+
+<section class="card">
+    <h2>🏰 Bienvenue sur The New Valdoria !</h2>
+    <p>Plongez au cœur d'une aventure épique. Une nation en pleine expansion et une communauté soudée vous attendent.</p>
+    <h3>✨ Pourquoi nous rejoindre ?</h3>
+    <p>
+        ✅ Un Monde Unique <br>
+        ✅ Une Économie Stable <br>
+        ✅ Des Événements réguliers <br>
+        ✅ Un Staff à l'Écoute
+    </p>
+</section>
+
+<section class="card">
+    <h2>🎡 Roue de la chance</h2>
+    <div id="wheelContainer">
+        <div id="pointer">▼</div>
+        <div id="wheel">
+            <div class="slice"><span>PERDU</span></div>
+            <div class="slice"><span>GAGNÉ</span></div>
+            <div class="slice"><span>PERDU</span></div>
+            <div class="slice"><span>GAGNÉ</span></div>
+            <div class="slice"><span>PERDU</span></div>
+            <div class="slice"><span>PERDU</span></div>
+            <div class="wheel-center"></div>
+        </div>
+    </div>
+    <div style="text-align:center">
+        <button id="spinBtn" onclick="spin()">Tourner la roue</button>
+        <p id="result"></p>
+    </div>
+</section>
+
+<section class="card">
+    <h2>🎫 Ouvrir un Ticket</h2>
+    <input id="discord" placeholder="Pseudo Discord">
+    <input id="minecraft" placeholder="Pseudo Minecraft">
+    <textarea id="reason" placeholder="Raison de votre demande..."></textarea>
+    <button onclick="createTicket()">Créer le ticket</button>
+</section>
+
+<section class="card">
+    <h2>🛠 Panel Admin (Tickets)</h2>
+    <div id="tickets"></div>
+</section>
+
+<section class="card">
+    <h2>👑 Hiérarchie</h2>
+    <p><span style="color:#ff0000">👑 Fondateur</span> | <span style="color:#e800ff">💍 Co-fondateur</span> | <span style="color:#3498db">🔧 Développeur</span></p>
+    <p>...et bien d'autres à découvrir sur notre Discord !</p>
+</section>
+
+<script>
+    /* --- SYSTÈME DE TICKETS --- */
+    let tickets = [];
+
+    function createTicket() {
+        let discord = document.getElementById("discord").value;
+        let mc = document.getElementById("minecraft").value;
+        let reason = document.getElementById("reason").value;
+
+        if(!discord || !mc || !reason) return alert("Merci de remplir tous les champs !");
+
+        tickets.push({ discord, mc, reason });
+        updateTickets();
+        
+        // Reset champs
+        document.getElementById("discord").value = "";
+        document.getElementById("minecraft").value = "";
+        document.getElementById("reason").value = "";
+    }
+
+    function updateTickets() {
+        let container = document.getElementById("tickets");
+        container.innerHTML = "";
+        tickets.forEach((t, i) => {
+            container.innerHTML += `
+                <div class="card" style="border:1px solid #333; margin:10px 0;">
+                    <strong>Discord :</strong> ${t.discord} | <strong>MC :</strong> ${t.mc}<br>
+                    <strong>Raison :</strong> ${t.reason}<br>
+                    <button onclick="closeTicket(${i})" style="margin-top:10px; padding:5px 10px; background:red; color:white;">Fermer</button>
+                </div>`;
+        });
+    }
+
+    function closeTicket(i) {
+        tickets.splice(i, 1);
+        updateTickets();
+    }
+
+    /* --- SYSTÈME DE ROUE --- */
+    let currentRotation = 0;
+    let isSpinning = false;
+
+    function spin() {
+        if (isSpinning) return;
+        
+        isSpinning = true;
+        let btn = document.getElementById("spinBtn");
+        let resultTxt = document.getElementById("result");
+        let wheel = document.getElementById("wheel");
+        
+        btn.disabled = true;
+        resultTxt.innerText = "La roue tourne...";
+
+        // On tourne au moins 5 tours (1800 deg) + un angle aléatoire
+        let extraDegrees = Math.floor(Math.random() * 360);
+        currentRotation += 1800 + extraDegrees;
+        
+        wheel.style.transform = `rotate(${currentRotation}deg)`;
+
+        setTimeout(() => {
+            isSpinning = false;
+            btn.disabled = false;
+            
+            // Calcul du résultat basé sur l'angle final
+            // On utilise (360 - angle) car la roue tourne dans le sens horaire face au curseur fixe
+            let actualAngle = (360 - (currentRotation % 360)) % 360;
+            
+            // Les tranches font 60 degrés chacune
+            // Tranche 2 (60-120) et 4 (180-240) sont vertes (Gagné)
+            if ((actualAngle >= 60 && actualAngle < 120) || (actualAngle >= 180 && actualAngle < 240)) {
+                resultTxt.innerHTML = "<span style='color: #2ecc71;'>🎉 GAGNÉ !</span>";
+            } else {
+                resultTxt.innerHTML = "<span style='color: #ff4d4d;'>❌ PERDU</span>";
+            }
+        }, 4000);
+    }
+</script>
+
+</body>
+</html>
